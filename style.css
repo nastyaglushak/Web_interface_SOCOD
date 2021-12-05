@@ -1,0 +1,125 @@
+body{
+	max-width: 2000px;
+	max-height: 1000px;
+	width: 100%;
+	height: 100%;
+	line-height:135%;
+	font-size: 20pt;
+	color: black;
+}
+ /*Navigation panel*/
+.menu{
+	list-style-type: none;
+	margin: 0; /*отступ*/
+	padding: 0; /*внутренний отступ*/
+	overflow: hidden;
+}
+
+.menu a{
+	text-decoration: none;
+	font-family: sans-serif;
+	color: #5757a0;
+	display: inline-block;
+	padding: 3px 10px;
+	background-color: lavender;
+	border-bottom: 5px solid #5757a0;
+
+}
+.menu li{
+	float: left;
+	display: block;
+	transition-duration: 0.5s;
+}
+
+.menu li:hover {
+	cursor: pointer;
+}
+
+.menu a:hover{
+	background-color: #d8bfd8;
+}
+
+.submenu {
+	visibility: hidden;
+	display: none;
+	position: absolute;
+	opacity: 0;
+	z-index: 5; 
+	transition: all 0.5s ease;
+	/*margin-top: 1rem;*/
+	left: 0;
+}
+
+.menu li:hover>ul,
+
+
+.submenu ul:hover {
+	visibility: visible;
+	opacity: 1;
+	display: block;
+}
+
+.submenu li {
+  clear: both;
+  width: 150px;
+}
+
+ /*Graph*/
+#canvas {
+    border: 1px solid black;
+    position: relative;
+    float: left;
+}
+
+ /*Registers*/
+.registers{
+	display: block;
+	padding: 20px 25px;
+	margin-right: 10px;
+	margin-left: 10px;
+	font-size: 15pt;
+	font-family: sans-serif;
+	color: #5757a0;
+}
+
+ /*Nav and tabs*/
+.nav_tabs{
+	border-bottom: 1px solid #d8bfd8;
+}
+
+.nav_item{
+	cursor: pointer;
+	display: flex;
+	flex-wrap: wrap;
+	list-style-type: none;
+	margin: 0;
+	border-bottom: 1px solid lightgray;
+}
+
+
+.nav_link{
+  padding: 0.5rem 0.75rem;
+  text-decoration: none;
+  color: black;
+  text-align: center;
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+
+.nav-tabs .nav-link:hover {
+  border: 3px solid #9400d3;
+}
+
+.tab_content {
+  padding: 20px;
+}
+
+
+[data-tab-content] {
+  display: none;
+}
+
+.active[data-tab-content] {
+  display: block;
+}
+
