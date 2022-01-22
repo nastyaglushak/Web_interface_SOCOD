@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Панель управления детектором SOCOD</title>
+    <meta charset="utf-8">
+    <!--<link rel="icon" href="data:,">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/titatoggle-dist-min.css">
+    <link rel="stylesheet" href="css/mystyle.css">
+    <link rel="stylesheet" href="css/toastr.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/toastr.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/myscript.js" async></script>
+    <script src="js/filesaver.min.js"></script>
+    <script src="js/plotly.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">SOCOD</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+         </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Файл
+                          </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#" id="save_data_as_txt">Сохранить данные</a>
+                        <a class="dropdown-item" href="#" id="save_plot_as_png">Сохранить график</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#help_modal">Помощь</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row" id="top_field">
+            <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm-8" id="chart_field">
+                        <div id="main_chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active btn-sm" data-toggle="tab" href="#global_limit_settings">Глобальные пороги</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-sm" data-toggle="tab" href="#indiv_limit_settings">Индивидуальные пороги</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-sm" data-toggle="tab" href="#calibration_settings">Калибровка детектора</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="tabs">
+                    <div id="global_limit_settings" class="container-fluid tab-pane active" method="post" role="form">
+                        <div class="row mt-1">
+                            <div class="col-sm-8">
+                                <font size ="5">
+                                <small class="text align-self-center"  data-toggle="tooltip" data-placement="right" title="frameLen">Длительность кадра</small></font>
+                            </div>
+                            <div class="input-group input-group-sm col-sm-4">
+                                <input class="form-control form-control-sm" type="number" value="0" min="0" name="frameLen" id="frame_len">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">мкс</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1 ">
+                            <div class=" col-sm-12">
+                                <input type="button" class="btn btn-success btn-send btn-sm ml-1 float-right" value="Прочитать" name="readFromRegBtn" id="read_from_reg_btn">
+                                <input type="button" class="btn btn-success btn-send btn-sm ml-1 float-right" value="Записать" name="writeToRegBtn" id="write_to_reg_btn">
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <h3 class="text-center">Глобальные пороги</h3>   
+                            </div>
+                        </div>
+
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Порог 1</th>
+                                    <th scope="col">Порог 2</th>
+                                    <th scope="col">Порог 3</th>
+                                    <th scope="col">Порог 4</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" name="limit1" id="limit_1"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" name="limit2" id="limit_2"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" name="limit3" id="limit_3"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" name="limit4" id="limit_4"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-1">
+                            <div class="col-sm-8">
+                                <button type="button" class="btn btn-success float-right" id="d_limit_a_write_btn">Записать глобальные пороги</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="indiv_limit_settings" class="container-fluid tab-pane fade">
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <h3 class=" text-center">Индивидуальные пороги</h3>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-sm-7">
+                                <font size ="5">
+                                <small class="text align-self-center">Номер чипа</small>
+                                </font>
+                            </div>
+                            <select class="custom-select custom-select-sm col-sm-4" id="select_chip" name="chip_select">
+                                <option selected >Выберите чип</option>
+                                <option  id="ch1" value ="00" >Чип 1</option>
+                                <option  id="ch2" value ="20" >Чип 2</option>
+                                <option  id="ch3" value ="40" >Чип 3</option>
+                                <option  id="ch4" value ="60" >Чип 4</option>
+                                <option  id="ch5" value ="80" >Чип 5</option>
+                                <option  id="ch6" value ="A0" >Чип 6</option>
+                                </select> 
+                        </div>
+
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Порог 1</th>
+                                    <th scope="col">Порог 2</th>
+                                    <th scope="col">Порог 3</th>
+                                    <th scope="col">Порог 4</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Канал 1</th>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR11"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR12"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Канал 2</th>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR21"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR22"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Канал 3</th>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR31"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR32"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR33"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR34"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Канал 4</th>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR41"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR42"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR43"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR44"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Канал 5</th>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR51"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR52"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Канал 6</th>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR61"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR62"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Канал 7</th>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR71"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR72"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR73"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR74"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Канал 8</th>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR81"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR82"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR83"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR84"></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-1">
+                            <div class="col-sm-9">
+                                <button type="button" class="btn btn-info" id="limit_save_file">Сохранить в файл</button>
+                                <label for="input" class="btn btn-info">Загрузить из файла</label>
+                                <input name="inputdata" id="input" class="btn " type="file" hidden>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-1">
+                            <div class="col-sm-8">
+                                <button type="button" class="btn btn-success float-right" id="d_ilimit_a_write_btn">Записать индивидуальные пороги</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="calibration_settings" class="container-fluid tab-pane fade ">
+                        <div class="row mt-1"> 
+                            <canvas width="800" height="800" id="graph_data"></canvas>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-sm-10">
+                                <label class=" col-sm-5 " data-placement="right">Выбор порога</label>
+                                <div class="input-group input-group-sm col-sm-12 float-right">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Чип</span>
+                                    </div>
+                                    <input class="form-control form-control-sm" type="number" value="0" min="0" id="chip_num">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Канал</span>
+                                    </div>
+                                    <input class="form-control form-control-sm" type="number" value="0" min="0" id="ch_num">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Порог</span>
+                                    </div>
+                                    <input class="form-control form-control-sm" type="number" value="0" min="0" id="lim_num">
+
+                                </div>
+                            </div>
+                            <div class="col-sm-10">
+                                <label class=" col-sm-5 " data-placement="right">Количество отсчетов</label>
+                                <input class="form-control form-control-sm col-sm-5 float-right" type="number" value="0" min="0" name="data_number" id="count_number">
+                            </div>
+                            <div class="col-sm-10">
+                                <label class=" col-sm-5 " data-placement="right">Длина шага</label>
+                                <input class="form-control form-control-sm col-sm-5 float-right" type="number" value="0" min="0" name="step_num" id="step_number">
+                            </div>
+                            <div class="col-sm-10">
+                                <button type="button" class="btn btn-success ml-1 float-left" id="d_add_graph_btn">Снять данные</button>
+                                <button type="button" class="btn btn-success ml-1 float-left" id="d_draw_save_btn">Сохранить данные</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="row" id="bottom_field">
+            <div class="col-sm-8">
+                <div class="row mt-1">
+                    <div class="col-sm-1">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="chFrRadio" id="channel_change_radio" value="channel" checked>
+                            <label class="form-check-label">Канал</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="range" min="1" value="1" class="slider" id="channel_slider">
+                    </div>
+                    <div class="col-sm-1">
+                        <input class="form-control form-control-sm" type="number" value="1" min="1" name="channelSliderNumber" id="channel_slider_number">
+                    </div>
+                    
+                    <div class="col-sm-2">
+                        <select class="custom-select custom-select-sm" id="select_chart_type">
+                            <option value="line">Линия</option>
+                            <option selected value="column">Столбчатая диаграмма</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-sm-1">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="chFrRadio" id="frame_change_radio" value="channel">
+                            <label class="form-check-label">Кадр</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="range" min="1" value="1" class="slider" id="frame_slider">
+                    </div>
+                    <div class="col-sm-1">
+                        <input class="form-control form-control-sm" type="number" value="1" min="1" name="frameSliderNumber" id="frame_slider_number">
+                    </div>
+
+                    <div class="col-sm-1 align-self-end">
+                        <div class="form-inline checkbox-slider--default">
+                            <label>
+                                <input type="checkbox" id="autoscale_plot" checked>
+                                <span class="ml-2">Автомасштаб</span>
+                             </label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-inline">
+                            <span class="align-self-center col-sm-4 text-right">X:</span>
+                            <input class="col-sm-4" type="number" value="0" step="0.1" id="x_scale_min">
+                            <input class="col-sm-4" type="number" value="0" step="0.1" id="x_scale_max">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-sm-1">
+                        <div class="form-check">
+                            <label class="form-check-label">Фильм</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="range" min="1" value="1" class="slider" id="film_slider">
+                    </div>
+                    <div class="col-sm-1">
+                        <input class="form-control form-control-sm" type="number" value="1" min="1" name="filmSliderNumber" id="film_slider_number">
+                    </div>
+
+                    <div class="col-sm-1"></div>
+
+                    <div class="col-sm-4">
+                        <div class="form-inline">
+                            <span class="align-self-center col-sm-4 text-right">Y:</span>
+                            <input class="col-sm-4" type="number" value="0" step="0.1" id="y_scale_min">
+                            <input class="col-sm-4" type="number" value="0" step="0.1" id="y_scale_max">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4 pb-4"></div>
+
+                <div class="progress">
+                    <div class="progress-bar" id="acquire_data_progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-4">
+                <div class="row ml-1 mt-1 pb-1">
+                    <div class="form-check form-check-sm col-sm-5 ml-2">
+                        <input class="form-check-input" type="checkbox" value="" name="forcedTrigger" id="forced_trigger" checked>
+                        <small class="form-check-label" for="forced_trigger">Принуд. запуск</small>
+                    </div>
+                </div>
+
+                <div class="row mt-2 ml-1">
+                    <div class="form-check form-check-sm col-sm-4 ml-2">
+                        <input class="form-check-input" type="checkbox" value="" name="realTime" id="real_time">
+                        <small class="form-check-label" for="real_time">Реальное время</small>
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="input-group input-group-sm col-sm-3 ml-4">
+                        <input class="form-control form-control-sm" type="number" value="500" min="10" name="realTimeVal" id="real_time_val">
+                        <div class="input-group-append">
+                            <span class="input-group-text">мс</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2 ml-1">
+                    <input type="button" class="btn btn-success btn-send btn-sm col-sm-4 mr-1 ml-2" value="Снять данные" name="acquireDataBtn" id="acquire_data_btn">
+                    <small class="align-self-center col-sm-5">Число фильмов</small>
+                    <input class="form-control form-control-sm col-sm-2 ml-1" type="number" min="1" value="1" name="dataFilmNum" id="data_film_num">
+                </div>
+
+                <div class="row mt-2 ml-1">
+                    <button type="button" class="btn btn-info btn-sm col-sm-5 ml-2" name="DRegABtn" id="d_reg_a_btn" data-toggle="modal" data-target="#d_reg_a_modal">Прямой доступ к регистрам</button>
+                    <button type="button" class="btn btn-secondary btn-sm col-sm-1 ml-1" name="stopBtn" id="stop_btn">
+                        <img src="res/stop.png" class="align-self-center">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<!-- Modal -->
+<div class="modal fade" id="help_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Таблица регистров</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-footer">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Номер</th>
+                                <th scope="col">Описание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>0x0240</td>
+                                <td>Статус</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>0x0188</td>
+                                <td>Команды детонации</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>0x0260</td>
+                                <td>Основные команды</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td>0xFFF1</td>
+                                <td>Версия аппаратуры</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>0xFFF2</td>
+                                <td>Версия прошивки</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">6</th>
+                                <td>0x0212</td>
+                                <td>Длина кадра</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="d_reg_a_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="d_reg_a_header">
+                <h5 class="modal-title">Прямой доступ к регистрам</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <form id=d_reg_a_form>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon3">0x</span>
+                                </div>
+                                <input type="text" class="form-control" name="regNum" id="d_reg_a_reg_num" placeholder="Номер регистра" required=true pattern="[0-9a-fA-F]{0,4}">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon3">0x</span>
+                                </div>
+                                <input type="text" class="form-control" name="dataIn" id="d_reg_a_data_in" placeholder="Данные" required=true pattern="[0-9a-fA-F]{0,4}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon3">Результат</span>
+                                </div>
+                                <span type="text" class="form-control hex-number" name="dataOut" id="d_reg_a_data_out" readonly></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form-inline" id="d_reg_a_footer">
+                <div class="col-sm-6">
+                    <button type="button" class="btn btn-success float-left" id="d_reg_a_read_btn">Прочитать</button>
+                </div>
+                <div class="col-sm-6">
+                    <button type="button" class="btn btn-info float-right" id="d_reg_a_write_btn">Записать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
