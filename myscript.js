@@ -1,4 +1,22 @@
+/**JS script describes the 
+ * operation of the SOCOD interface. 
+ * Created on the basis of the DIMEX4-Si interface
+ * Modified by A. Glushak, January, 2022*/
+
 const triggerTickLen = 1000. / 120.; //ns
+
+/**Functions used in plotting
+ * function getFormData(formId)
+ * function drawPlot(xValues, yValues, isChannel, num) 
+ * function withoutBaseData(yValues, channel, frame) 
+ * function changeYValues(yValues, channel, frame)
+ * function updatePlot()
+ * function manualScalePlot()
+ * function autoscalePlot()
+ * function setXYvaluesForManualScale(xValues, yValues)
+ * function updateManualScaleFields()
+ * function checkRealTimeField()
+ * */
 
 function getFormData(formId) {
     var uncheckedBoxes = $(formId + ' input[type=checkbox]:not(:checked)').map(
@@ -241,6 +259,7 @@ function checkRealTimeField() {
         $('#real_time_val').prop('disabled', true);
 }
 
+//Working with data transmission to the detector: function setFieldsFromJSON(json_obj) 
 function setFieldsFromJSON(json_obj) {
     for (var key in json_obj) {
         var value = json_obj[key];
@@ -298,8 +317,16 @@ var inProgress = false;
 var inExp = false;
 
 var fullData=[];
+var fullDataArray=[];
 var fullDataforPlot=[];
-
+var fullDataforGis=[];
+var data_x=[];
+/**Setting the channel display:
+ * function setChannelAndFrameNum()
+ * function setChannelSlider()
+ * function setChannelSliderValues() 
+ * function setChannelSliderFunctions()
+ * */
 
 function setChannelAndFrameNum() {
     var xhr = new XMLHttpRequest();
@@ -333,7 +360,7 @@ function setChannelSliderFunctions() {
         updatePlot();
     });
 }
-
+//Setting the scale: function setScaleInputFunctions()
 function setScaleInputFunctions() {
     $('#x_scale_min').on('input', function() {
         var minVal = Number(document.getElementById("x_scale_min").value);
@@ -379,7 +406,7 @@ function setScaleInputFunctions() {
         updatePlot();
     });
 }
-
+//Layout by frames and films: function dataArrayTo3DArray(dataArray, filmNum) 
 function dataArrayTo3DArray(dataArray, filmNum) {
     var data3DArray = [];
     for (var i = 0; i < filmNum; i++) {
@@ -395,7 +422,11 @@ function dataArrayTo3DArray(dataArray, filmNum) {
     }
     return data3DArray;
 }
-
+/**Setting frame parameters
+ * function setFrameSlider() 
+ * function setFrameSliderValues()
+ * function setFrameSliderFunctions() 
+ * */
 function setFrameSlider() {
     setFrameSliderValues();
     setFrameSliderFunctions();
@@ -418,7 +449,11 @@ function setFrameSliderFunctions() {
         updatePlot();
     });
 }
-
+/**Setting Film parameters
+ * function setFilmSlider()
+ * function setFilmSliderValues(value)
+ * function setFilmSliderFunctions()
+ * */
 function setFilmSlider() {
     setFilmSliderValues(dataFilmNum);
     setFilmSliderFunctions();
@@ -443,7 +478,7 @@ function setFilmSliderFunctions() {
         updatePlot();
     });
 }
-
+//Selection of display by frames or channels:function onChFrRadioChange() 
 function onChFrRadioChange() {
     if (document.getElementById("channel_change_radio").checked == true) {
         document.getElementById("channel_slider").disabled = false;
@@ -460,7 +495,7 @@ function onChFrRadioChange() {
     if (acquiredData.length > 0)
         updatePlot();
 }
-
+//Formation of the received data: function initData() 
 function initData() {
     for (var i = 0; i < frameNum; i++) {
         var channelArray = [];
@@ -473,7 +508,7 @@ function initData() {
         acquiredData.push(baseData);
     }
 }
-
+//Data layout according to a given number of films: function fitBaseData(data3DArray, filmNum)
 function fitBaseData(data3DArray, filmNum) {
     var data2DArray = [];
     for (var i = 0; i < frameNum; i++) {
@@ -496,7 +531,7 @@ function fitBaseData(data3DArray, filmNum) {
 
     baseData = data2DArray;
 }
-
+//Stopping data collection: function stopDataAcqusition() 
 function stopDataAcqusition() {
     if (inProgress) {
         setAcquireDataProgressBarValue(0);
@@ -505,7 +540,7 @@ function stopDataAcqusition() {
         toastr.info('Сбор данных остановлен');
     }
 }
-
+//Request to receive data and display it: function acquireDataRequest(formData, filmNum, currentFilmNum, fullDataArray, realTime, realTimeVal, acquireBase)
 function acquireDataRequest(formData, filmNum, currentFilmNum, fullDataArray, realTime, realTimeVal, acquireBase) {
     if (stopDataRequest) {
         stopDataRequest = false;
@@ -555,7 +590,7 @@ function acquireDataRequest(formData, filmNum, currentFilmNum, fullDataArray, re
             }
         });
 }
-
+//Processing incoming data: function getDataArrayFromJSON(json_obj)
 function getDataArrayFromJSON(json_obj) {
     var dataList = json_obj['dataOut'].split(' ');
     var dataArray = [];
@@ -565,18 +600,21 @@ function getDataArrayFromJSON(json_obj) {
 
     return dataArray;
 }
-
+//Generating incoming data: acquireData(formData, filmNum, realTime, realTimeVal, acquireBase)
 function acquireData(formData, filmNum, realTime, realTimeVal, acquireBase) {
 
     fullDataArray = []
     acquireDataRequest(formData, filmNum, 0, fullDataArray, realTime, realTimeVal, acquireBase);
 }
-
+//Displaying the data set process: function setAcquireDataProgressBarValue(value) 
 function setAcquireDataProgressBarValue(value) {
     $('#acquire_data_progress').css('width', value + '%').attr('aria-valuenow', value);
     $("#acquire_data_progress").text(value + '%');
 }
-
+/**Operations on the plot:
+ * savePlot(fileName, format)
+ * resizePlot()
+ * */
 function savePlot(fileName, format) {
     if (format == 'png')
         Plotly.downloadImage('main_chart', { format: 'png', width: 800, height: 600, filename: fileName });
@@ -595,8 +633,11 @@ function resizePlot() {
 
     Plotly.relayout('main_chart', layout);
 }
-
-function getDAC_Chip(numChip){
+/**Formation of the chip address
+ * getDACChip(numChip)
+ * getDACChannel(numChannel,ilimit)
+ * */
+function getDACChip(numChip){
     var dac_code;
 
     if (numChip == 1){ dac_code=parseInt('0',16);}
@@ -608,7 +649,7 @@ function getDAC_Chip(numChip){
     return dac_code;
 }
 
-function getDAC_Channel(numChannel,ilimit){
+function getDACChannel(numChannel,ilimit){
     var dac_code;
 
     if ((numChannel == 1) && (ilimit == 2)){dac_code=0;};
@@ -639,6 +680,47 @@ function getDAC_Channel(numChannel,ilimit){
 
 }
 
+//Determining the counter number: function getCounterNumber(numChannel,ilimit)
+function getCounterNumber(numChannel,ilimit){
+    var count_code;
+
+    if ((numChannel == 1) && (ilimit == 2)){count_code=1;};
+    if ((numChannel == 1) && (ilimit == 1)){count_code=2;};
+    if ((numChannel == 2) && (ilimit == 2)){count_code=3;};
+    if ((numChannel == 2) && (ilimit == 1)){count_code=4;};
+    if ((numChannel == 3) && (ilimit == 4)){count_code=5;};
+    if ((numChannel == 3) && (ilimit == 3)){count_code=6;};
+    if ((numChannel == 3) && (ilimit == 2)){count_code=7;};
+    if ((numChannel == 3) && (ilimit == 1)){count_code=8;};
+    if ((numChannel == 4) && (ilimit == 4)){count_code=9;};
+    if ((numChannel == 4) && (ilimit == 3)){count_code=10;};
+    if ((numChannel == 4) && (ilimit == 2)){count_code=11;};
+    if ((numChannel == 4) && (ilimit == 1)){count_code=12;};
+    if ((numChannel == 5) && (ilimit == 2)){count_code=13;};
+    if ((numChannel == 5) && (ilimit == 1)){count_code=13;};
+    if ((numChannel == 6) && (ilimit == 2)){count_code=14;};
+    if ((numChannel == 6) && (ilimit == 1)){count_code=14;};
+    if ((numChannel == 7) && (ilimit == 4)){count_code=15;};
+    if ((numChannel == 7) && (ilimit == 3)){count_code=15;};
+    if ((numChannel == 7) && (ilimit == 2)){count_code=16;};
+    if ((numChannel == 7) && (ilimit == 1)){count_code=16;};
+    if ((numChannel == 8) && (ilimit == 4)){count_code=17;};
+    if ((numChannel == 8) && (ilimit == 3)){count_code=17;};
+    if ((numChannel == 8) && (ilimit == 2)){count_code=18;};
+    if ((numChannel == 8) && (ilimit == 1)){count_code=18;};
+    return count_code;
+
+}
+
+function dataValid(numChip) {
+    var startValue;
+    if (numChip == 1){startValue=0;};
+    if (numChip == 4){startValue=19;};
+    if (numChip == 5){startValue=39;};
+    return startValue;
+}
+
+//Formation of an array of values of individual thresholds: function DataFormRead()
 function DataFormRead(){
     var limitTHR=[];
 
@@ -678,8 +760,108 @@ function DataFormRead(){
     return limitTHR;
 }
 
+function THRLoad(data_load){
+    document.getElementById("THR11").value=Number(data_load[0]);
+    document.getElementById("THR12").value=Number(data_load[1]);
+        
+    document.getElementById("THR21").value=Number(data_load[2]);
+    document.getElementById("THR22").value=Number(data_load[3]);
 
+    document.getElementById("THR31").value=Number(data_load[4]);
+    document.getElementById("THR32").value=Number(data_load[5]);
+    document.getElementById("THR33").value=Number(data_load[6]);
+    document.getElementById("THR34").value=Number(data_load[7]);
 
+    document.getElementById("THR41").value=Number(data_load[8]);
+    document.getElementById("THR42").value=Number(data_load[9]);
+    document.getElementById("THR43").value=Number(data_load[10]);
+    document.getElementById("THR44").value=Number(data_load[11]);
+
+    document.getElementById("THR51").value=Number(data_load[12]);
+    document.getElementById("THR52").value=Number(data_load[13]);
+        
+    document.getElementById("THR61").value=Number(data_load[14]);
+    document.getElementById("THR62").value=Number(data_load[15]);
+
+    document.getElementById("THR71").value=Number(data_load[16]);
+    document.getElementById("THR72").value=Number(data_load[17]);
+    document.getElementById("THR73").value=Number(data_load[18]);
+    document.getElementById("THR74").value=Number(data_load[19]);
+
+    document.getElementById("THR81").value=Number(data_load[20]);
+    document.getElementById("THR82").value=Number(data_load[21]);
+    document.getElementById("THR83").value=Number(data_load[22]);
+    document.getElementById("THR84").value=Number(data_load[23]);
+
+}
+
+//Sending registers: ajaxSendData(i, formDataReady)
+function ajaxSendData(i, formDataReady){
+        $.ajax({
+                url: '/d_reg_a_write',
+                type: 'POST',
+                data: JSON.stringify(formDataReady[i]),  
+                contentType: "application/json",   
+                complete: function(response) {
+                json_obj = JSON.parse(response.responseText);
+                var err = json_obj['status'];
+                if (err < 0){
+                    console.log('error', formDataReady[i].regNum, formDataReady[i].dataIn);
+                    }
+                else{
+                    console.log('success', formDataReady[i].regNum, formDataReady[i].dataIn);
+                    }
+                },
+            });
+    }
+
+function acqDataReq() {
+            var formData = {};
+            formData["forcedTrigger"] = true;
+            fullDataArray=[];
+            $.ajax({
+                    type: 'POST',
+                    url: '/acquire_data',
+                    data: JSON.stringify(formData),
+                    complete: function(response) {
+                        json_obj = JSON.parse(response.responseText);
+                        var dataArray = getDataArrayFromJSON(json_obj);
+                        console.log("Send data",dataArray);
+                        for (var j = 0; j < dataArray.length; j++)
+                            fullDataArray.push(dataArray[j]);
+                        console.log("Sum data",fullDataArray);
+
+                    }
+                });
+            }
+
+//Functions for working with arrays
+function get2dimensional(array, limit) {
+    const array2 = [];
+    let section;
+
+    for (const [index, element] of array.entries()) {
+        if (index % limit === 0) array2.push(section = []);
+            section.push(element);
+    }
+
+    return array2;
+    }
+
+function r2c(arr) {
+    var arrC = [],
+    x = Math.max.apply(Math, arr.map(function (e) {return e.length;})),
+    y = arr.length,
+    i, j;
+    for (i = 0; i < x; ++i) {   // this is the loop "down"
+        arrC[i] = [];
+        for (j = 0; j < y; ++j) // and this is the loop "across"
+            if (i in arr[j])
+                arrC[i].push(arr[j][i]);
+    }
+    return arrC;
+    }
+        
 window.onresize = function() {
     resizePlot();
 };
@@ -933,7 +1115,6 @@ $(document).ready(function() {
         var formData = {};
         var formLimit =[];
         var formDataReady = [];
-        var i;
 
         var limit1 = document.getElementById("limit_1").value;
         formLimit.unshift(limit1);
@@ -959,7 +1140,7 @@ $(document).ready(function() {
                 formDataReady.push(JSON.parse(JSON.stringify(formData)));
 
                 formData["regNum"]=parseInt('0x' + 305);//305
-                formData["dataIn"]=parseInt(Number(formLimit.pop()));//Number(formLimit.pop());
+                formData["dataIn"]=parseInt(Number(formLimit.pop()));
                 formDataReady.push(JSON.parse(JSON.stringify(formData)));
 
                 formData["regNum"]=parseInt('0x'+260);//260
@@ -968,27 +1149,9 @@ $(document).ready(function() {
                 }
         }
         
-        function ajaxsend(i){
-        $.ajax({
-                url: '/d_reg_a_write',
-                type: 'POST',
-                data: JSON.stringify(formDataReady[i]),  
-                contentType: "application/json",   
-                complete: function(response) {
-                json_obj = JSON.parse(response.responseText);
-                var err = json_obj['status'];
-                if (err < 0){
-                    console.log('error', formDataReady[i].regNum, formDataReady[i].dataIn);
-                    }
-                else{
-                    console.log('success', formDataReady[i].regNum, formDataReady[i].dataIn);
-                    }
-                },
-            });
-        }
 
-        for(i=0; i<13;i++){
-            ajaxsend(i);
+        for(var i=0; i<formDataReady.length;i++){
+            ajaxSendData(i,formDataReady);
         }    
 
     return false;
@@ -999,38 +1162,42 @@ $(document).ready(function() {
         /////Working with data
         var limitTHR=DataFormRead();
 
-        var numChip=getDAC_Chip(document.getElementById("select_chip").options.selectedIndex);
+        var numChip=getDACChip(document.getElementById("select_chip").options.selectedIndex);
+        console.log(document.getElementById("select_chip").options.selectedIndex);
+
+        if (document.getElementById("select_chip").options.selectedIndex==0){
+            toastr.error('Введите номер чипа!!!');
+        }
 
         ///////Prepairing data
-        var data_num=[1, 2, 3, 4, 5, 6, 7, 8];
+        var chip_num=[1, 2, 3, 4, 5, 6, 7, 8];
         var dac_code_ch=[];
-        var dac_code_forcalc=[];
+        var chipcode_forcalc=[];
 
         var regData=[];
         var dataIn=[];
 
-        for (var i=0; i<data_num.length; i++){
-            if ((data_num[i]==1) || (data_num[i]==2) || (data_num[i]==5) || (data_num[i]==6)){
-                dac_code_ch.push(getDAC_Channel(data_num[i], 1));
-                dac_code_ch.push(getDAC_Channel(data_num[i], 2));
+        for (var i=0; i<chip_num.length; i++){
+            if ((chip_num[i]==1) || (chip_num[i]==2) || (chip_num[i]==5) || (chip_num[i]==6)){
+                dac_code_ch.push(getDACChannel(chip_num[i], 1));
+                dac_code_ch.push(getDACChannel(chip_num[i], 2));
                 for(var k=0; k<2;k++){
-                    dac_code_forcalc.push(numChip);
+                    chipcode_forcalc.push(numChip);
                 }
             } else {
-                dac_code_ch.push(getDAC_Channel(data_num[i], 1));
-                dac_code_ch.push(getDAC_Channel(data_num[i], 2)); 
-                dac_code_ch.push(getDAC_Channel(data_num[i], 3));
-                dac_code_ch.push(getDAC_Channel(data_num[i], 4)); 
+                dac_code_ch.push(getDACChannel(chip_num[i], 1));
+                dac_code_ch.push(getDACChannel(chip_num[i], 2)); 
+                dac_code_ch.push(getDACChannel(chip_num[i], 3));
+                dac_code_ch.push(getDACChannel(chip_num[i], 4)); 
                 for(var k=0; k<4;k++){
-                    dac_code_forcalc.push(numChip);
+                    chipcode_forcalc.push(numChip);
                 }
             }
 
         }
 
-
         for (var i=0; i<dac_code_ch.length; i++){
-            regData[i]=dac_code_ch[i]+dac_code_forcalc[i];
+            regData[i]=dac_code_ch[i]+chipcode_forcalc[i];
         }
 
 
@@ -1061,27 +1228,8 @@ $(document).ready(function() {
         }
         
 
-        function ajaxsend(i){
-        $.ajax({
-                url: '/d_reg_a_write',
-                type: 'POST',
-                data: JSON.stringify(formDataReady[i]),  
-                contentType: "application/json",   
-                complete: function(response) {
-                json_obj = JSON.parse(response.responseText);
-                var err = json_obj['status'];
-                if (err < 0){
-                    console.log('error', formDataReady[i].regNum, formDataReady[i].dataIn);
-                    }
-                else{
-                    console.log('success', formDataReady[i].regNum, formDataReady[i].dataIn);
-                    }
-                },
-            });
-        }
-
-        for(i=0; i<73;i++){
-            ajaxsend(i);
+        for(i=0; i<formDataReady.length;i++){
+            ajaxSendData(i,formDataReady);
         } 
         return false;    
     };
@@ -1101,37 +1249,7 @@ $(document).ready(function() {
             }
         });
 
-        document.getElementById("THR11").value=Number(data_load[0]);
-        document.getElementById("THR12").value=Number(data_load[1]);
-        
-        document.getElementById("THR21").value=Number(data_load[2]);
-        document.getElementById("THR22").value=Number(data_load[3]);
-
-        document.getElementById("THR31").value=Number(data_load[4]);
-        document.getElementById("THR32").value=Number(data_load[5]);
-        document.getElementById("THR33").value=Number(data_load[6]);
-        document.getElementById("THR34").value=Number(data_load[7]);
-
-        document.getElementById("THR41").value=Number(data_load[8]);
-        document.getElementById("THR42").value=Number(data_load[9]);
-        document.getElementById("THR43").value=Number(data_load[10]);
-        document.getElementById("THR44").value=Number(data_load[11]);
-
-        document.getElementById("THR51").value=Number(data_load[12]);
-        document.getElementById("THR52").value=Number(data_load[13]);
-        
-        document.getElementById("THR61").value=Number(data_load[14]);
-        document.getElementById("THR62").value=Number(data_load[15]);
-
-        document.getElementById("THR71").value=Number(data_load[16]);
-        document.getElementById("THR72").value=Number(data_load[17]);
-        document.getElementById("THR73").value=Number(data_load[18]);
-        document.getElementById("THR74").value=Number(data_load[19]);
-
-        document.getElementById("THR81").value=Number(data_load[20]);
-        document.getElementById("THR82").value=Number(data_load[21]);
-        document.getElementById("THR83").value=Number(data_load[22]);
-        document.getElementById("THR84").value=Number(data_load[23]);
+        THRLoad(data_load);
 
       })();
     });
@@ -1156,7 +1274,7 @@ $(document).ready(function() {
         limitTHR.splice(22, 0, '-', '-');
 
 
-        data_arr=[]
+        var data_arr=[]
 
         for (var i=0; i<8; i++){
             data_arr.push([]);
@@ -1180,51 +1298,159 @@ $(document).ready(function() {
         return false;
     };
     
-    function r2c(arr) {
-        var arrC = [],
-        x = Math.max.apply(Math, arr.map(function (e) {return e.length;})),
-        y = arr.length,
-        i, j;
-        for (i = 0; i < x; ++i) {   // this is the loop "down"
-            arrC[i] = [];
-            for (j = 0; j < y; ++j) // and this is the loop "across"
-                if (i in arr[j])
-                    arrC[i].push(arr[j][i]);
-        }
-        return arrC;
-    }
 
     function drawPlot(data_x, data_y) {
         var ctx = document.getElementById("graph_data").getContext("2d");
-        ctx.canvas.width = 800;
-        ctx.canvas.height = 800;
+        ctx.canvas.width = 600;
+        ctx.canvas.height = 600;
         let chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: data_x,
                 datasets: [{
-                label: 'Characteristic', 
+                label: 'Counting characteristic', 
                 backgroundColor: 'transparent',
                 borderColor: 'green',
                 data: data_y}]
         },
         options: {
+            scales:{
+                yAxes:[{
+                    ticks:{
+                        min:0,
+                        max:100,
+                        beginAtZero:true,
+                    }
+                }
+                ]
+            } ,
             responsive: false,
         }
         });
 
     }
 
-    var data_x=[];
 
-    function formCalData(ch_num,step_num){
-        var formData = {};
-        var formDataReady = [];
+    function drawGis(data_x, data_y) {
+        var ctx = document.getElementById("graph_data").getContext("2d");
+        ctx.canvas.width = 600;
+        ctx.canvas.height = 600;
+        let chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data_x,
+                datasets: [{
+                label: 'Histogram of output values', 
+                backgroundColor: 'blue',
+                borderColor: 'blue',
+                data: data_y}]
+        },
+        options: {
+            scales:{
+                yAxes:[{
+                    ticks:{
+                        min:0,
+                        max:100,
+                        beginAtZero:true,
+                    }
+                }
+                ]
+            } ,
+            responsive: false,
+        }
+        });
 
-        for ( var i=0; i <= 64; i=i+step_num){
+    }
+
+    document.getElementById("d_add_graph_btn").onclick = function(){
+
+        var data_ch=[]; 
+        var data_x=[];
+        fullDataforPlot=[];
+        var count_num=0;
+        var count_lim=0;
+
+        var chipnum = Number(document.getElementById("chip_num").value);
+        var chip_num=getDACChip(Number(document.getElementById("chip_num").value));
+        var chlim_num=getDACChannel(Number(document.getElementById("ch_num").value),Number(document.getElementById("lim_num").value));
+        var ch_num=chip_num+chlim_num;
+        var counter_num=getCounterNumber(Number(document.getElementById("ch_num").value),Number(document.getElementById("lim_num").value));
+
+        var c_num=Number(document.getElementById("count_number").value);
+        var st_num=Number(document.getElementById("step_number").value);
+
+        var send_data=formCalData(ch_num, st_num);
+        var thr_num=Math.round(64/st_num);
+        var acDatasum=0;
+        
+        fullDataArray=[];
+        var dataSendValid = 0;
+
+        let DataTimer = setTimeout(async function dtick() {
+            
+            if(count_num==0){
+                sendCalData(count_lim,send_data); 
+                acDatasum=0;
+                fullData=[];
+                count_num=count_num+1;
+                console.log("Data send");
+            }
+
+            if (count_num==c_num+1){
+
+                data_x.push(JSON.stringify(send_data[4*count_lim+1].dataIn));
+                for (var i=0; i<data_ch.length; i++){
+                    acDatasum = acDatasum + data_ch[i];
+                    if (i==data_ch.length-1){
+                        fullDataforPlot.push(acDatasum/c_num); 
+                    }
+                }
+                
+                count_num=0;
+                dataSendValid=0;
+                thr_num=thr_num-1;
+                count_lim=count_lim+1;
+                data_ch=[];
+                console.log("Current value", count_num, thr_num, count_lim);
+                
+            }
+
+            if (dataSendValid!=count_num){
+                dataSendValid=count_num;
+                acqDataReq(); 
+            };
+            
+            if (fullDataArray.length!=0){
+                    data_ch.push(fullDataArray[dataValid(chipnum)+counter_num]);
+                    fullDataArray=[];
+                    console.log("This mass", count_num, data_ch);
+                    count_num=count_num+1;
+                    console.log("DataSend", dataSendValid, count_num)} ;
+
+            if (thr_num>0) DataTimer = setTimeout(dtick, 0.5);
+
+            if (thr_num==0) {drawPlot(data_x,fullDataforPlot); 
+            console.log(data_x, fullDataforPlot); }
+             
+        }, 0.5);
+
+        /**Allocation of registers of a given threshold 
+        (that is, which 4 registers need to be sent) from the total threshold array*/
+        function sendCalData(count_lim, send_data){
+        for (i=0; i<4; i++){
+            ajaxSendData(4*count_lim+i,send_data);}
+        }
+
+        /**Generates an array of registers for a given channel 
+        (the first 4 for one threshold value, the second 4 for the next, and so on)*/
+        function formCalData(ch_num,step_num){
+            var formData = {};
+            var formDataReady = [];
+
+            for ( var i=0; i <= 64; i=i+step_num){
             if (i <=64){
                 formData["regNum"]=parseInt('0x' + 300);
-                formData["dataIn"]=parseInt(ch_num);//4 chip ch8 thr1 60+17/dec 119 
+                formData["dataIn"]=parseInt(ch_num);
                 formDataReady.push(JSON.parse(JSON.stringify(formData)));
 
                 formData["regNum"]=parseInt('0x' + 301);
@@ -1242,135 +1468,7 @@ $(document).ready(function() {
         }
 
         return formDataReady;
-    }
-
-
-    function ajaxsend(i, formDataReady){
-        $.ajax({
-                url: '/d_reg_a_write',
-                type: 'POST',
-                data: JSON.stringify(formDataReady[i]),  
-                contentType: "application/json",   
-                complete: function(response) {
-                json_obj = JSON.parse(response.responseText);
-                var err = json_obj['status'];
-                if (err < 0){
-                    //console.log('error', formDataReady[i].regNum, formDataReady[i].dataIn);
-                    }
-                else{
-                    //console.log('success', formDataReady[i].regNum, formDataReady[i].dataIn);
-                    }
-                },
-            });
-    }
-
-
-    function sendCalData(thr_num, c, send_data){
-        for (i=0; i<4; i++){
-            ajaxsend(4*c+i,send_data);}
-    }
-
-
-    function dataPause(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-    
-
-
-    document.getElementById("d_add_graph_btn").onclick = function(){
-
-        var data_arr=[];
-        var data_ch=[]; 
-        var data_for_dr=[];
-        data_x=[];
-        fullDataforPlot=[];
-        var n=0;
-        var c=0;
-        var data_start=0;
-
-        var chip_num=getDAC_Chip(Number(document.getElementById("chip_num").value));
-        var chlim_num=getDAC_Channel(Number(document.getElementById("ch_num").value),Number(document.getElementById("lim_num").value));
-        var ch_num=chip_num+chlim_num;
-
-        var c_num=Number(document.getElementById("count_number").value);
-        var st_num=Number(document.getElementById("step_number").value);
-
-        var send_data=formCalData(ch_num, st_num);
-        var thr_num=Math.round(64/st_num);
-        var s=0;
-        
-        var formDataReady = [];
-        var fullDataArray=[];
-
-        var datasendprom = 0;
-        let DataTimer = setTimeout(async function dtick() {
-            
-            if(n==0){
-                sendCalData(thr_num,c,send_data); 
-                s=0;
-                fullData=[];
-                n=n+1;
-                console.log("Data send");
-            }
-
-            if (n==c_num+1){
-
-                data_x.push(JSON.stringify(send_data[4*c+1].dataIn));
-                for (var i=0; i<data_ch.length; i++){
-                    s = s + data_ch[i];
-                    if (i==data_ch.length-1){
-                        fullDataforPlot.push(s/c_num); 
-                    }
-                }
-                
-                n=0;
-                datasendprom=0;
-                thr_num=thr_num-1;
-                c=c+1;
-                data_ch=[];
-                console.log("Current value", n, thr_num, c);
-                
-            }
-
-            if (datasendprom!=n){
-                datasendprom=n;
-                acqDataReq(); 
-            };
-            
-            if (fullDataArray.length!=0){
-                    data_ch.push(fullDataArray[20+chlim_num]);
-                    fullDataArray=[];
-                    console.log("This mass", n, data_ch);
-                    n=n+1;
-                    console.log("DataSend", datasendprom, n)} ;
-
-            if (thr_num>0) DataTimer = setTimeout(dtick, 0.5);
-
-            if (thr_num==0) drawPlot(data_x,fullDataforPlot);  
-             
-        }, 0.5);
-
-        function acqDataReq() {
-            var formData = {};
-            formData["forcedTrigger"] = true;
-            $.ajax({
-                    type: 'POST',
-                    url: '/acquire_data',
-                    data: JSON.stringify(formData),
-                    complete: function(response) {
-                        json_obj = JSON.parse(response.responseText);
-                        fullDataArray=[];
-                        var dataArray = getDataArrayFromJSON(json_obj);
-                        console.log("Send data",dataArray);
-                        for (var j = 0; j < dataArray.length; j++)
-                            fullDataArray.push(dataArray[j]);
-                        console.log("Sum data",fullDataArray);
-
-                    }
-                });
-            }
-
-        return false;
+        }
   
     };
     document.getElementById("d_draw_save_btn").onclick = function() {
@@ -1405,8 +1503,276 @@ $(document).ready(function() {
         return false;
     };
         
+    document.getElementById("d_draw_gis_btn").onclick = function() {
+        var countdata=Number(document.getElementById("caldata_number").value);
+        var chip_num=Number(document.getElementById("chip_num").value);
+        var datach=[];
+        var datachmod=[];
 
+        var data_x=[1,2,3,4,5,6,7,8];
+        fullDataArray=[];
+
+        var dataSendValid=0;
+        var datacount=countdata;
+        fullDataforGis=[];
+        var sum=0;
+        var chnum=[];
+
+        for (var i=1; i<9; i++){
+            chnum.push(getCounterNumber(i, Number(document.getElementById("lim_num").value)));
+            console.log("Chnum",chnum,dataValid(chip_num));
+        }
+
+        let DataSendTimer = setTimeout(async function dstick() {
+            
+            if (dataSendValid!=datacount){
+                dataSendValid=datacount;
+                acqDataReq();    
+            }
+
+            if (fullDataArray.length!=0){
+                datacount = datacount-1;
+
+                for (var i=0; i<8; i++){
+                    datach.push(fullDataArray[dataValid(chip_num)+chnum[i]]);
+                    console.log("Data for channes", datach, dataValid(chip_num)+chnum[i]);  
+                }
+            }
+
+            
+            if (datacount != 0) {
+                DataSendTimer = setTimeout(dstick, 0.5);
+            }
+
+            if (datacount==0){
+                datachmod=r2c(get2dimensional(datach,8));
+                console.log ("Datacmod",datach, datachmod);
+                for (var i=0; i<datachmod.length; i++){
+                    for (var j = 0; j<datachmod[0].length; j++) {
+                        sum=sum+datachmod[i][j];
+                        console.log(sum);
+                    }
+                    fullDataforGis.push(sum/countdata);
+                    sum=0;
+                    console.log(fullDataforGis);
+                }
+                drawGis(data_x,fullDataforGis); 
+                console.log(data_x, fullDataforGis);
+            }
+
+        }, 0.5);
+        
+        return false;
+    };
+
+
+    document.getElementById("d_autolimit_btn").onclick = function(){
+        
+        document.getElementById("status_mes").value="Calculation of thresholds";
+
+        var data_ch=[]; 
+        var count_num=0;
+        var count_lim=0;
+
+        var chipnum = Number(document.getElementById("chip_num").value);
+        var chlim_num =[];
+        var ch_num =[];
+        var counter_num=[];
+        var send_data=[];
+
+        var c_num=Number(document.getElementById("count_number").value);
+        var st_num=Number(document.getElementById("step_number").value);
+
+
+        for (var i=1; i<9; i++){
+            chlim_num.push(getDACChannel(i,Number(document.getElementById("lim_num").value)));
+            counter_num.push(getCounterNumber(i,Number(document.getElementById("lim_num").value)));
+        }
+
+        for (var i=0; i<8; i++){
+            ch_num.push(getDACChip(chipnum)+chlim_num[i]);
+        }
+
+        send_data=formCalData(ch_num,st_num);
+
+
+        var thr_num=Math.round(64/st_num);
+        var thr_num_max=Math.round(64/st_num);
+        var acDatasum=0;
+        
+        fullDataArray=[];
+        var dataSendValid = 0;
+        var fullDataforCalc=[];
+        var datachav=[];
+        var dataforProc=[];
+        var datalim=[];
+        var lim_num=[];
+        var ThrLimInst=[];
+        var ThrCalc=[];
+
+
+        let DataTimer = setTimeout(async function dtick() {
+            
+            if(count_num==0){
+                document.getElementById("status_mes").value="Calculating characteristics THR "+count_lim;
+                sendCalData(count_lim,send_data); 
+                acDatasum=0;
+                count_num=count_num+1;
+                console.log("Data send");
+            }
+
+            //Calculation of average values at a single threshold in channels                
+            if (count_num==c_num+1){
+                lim_num.push(JSON.stringify(send_data[32*count_lim+1].dataIn));
+                console.log ("Data Lim", lim_num);
+                console.log("DataProc", dataforProc);
+                datachav=r2c(get2dimensional(data_ch,8));
+                for (var i=0; i<datachav.length; i++){
+                    for (var j=0; j<datachav[0].length; j++){
+                        acDatasum=acDatasum+datachav[i][j];
+                    }
+                    
+                    dataforProc.push(acDatasum/datachav[0].length);
+                    console.log("Data Sum", acDatasum, datachav, dataforProc);
+                    acDatasum=0;
+                }
+                count_num=0;
+                dataSendValid=0;
+                thr_num=thr_num-1;
+                count_lim=count_lim+1;
+                data_ch=[];
+                datachav=[];
+                
+            }
+
+            if (dataSendValid!=count_num){
+                dataSendValid=count_num;
+                acqDataReq(); 
+            };
+
+            
+            if (fullDataArray.length!=0){
+                    console.log("Full Data", fullDataArray);
+                    for (var i = 0; i < 8; i++) {
+                        data_ch.push(fullDataArray[dataValid(chipnum)+counter_num[i]]);
+                    };
+                    fullDataArray=[];
+                    count_num=count_num+1;
+                    console.log("This mass", count_num, data_ch);
+                } ;
+
+            if (thr_num!=0) DataTimer = setTimeout(dtick, 0.5);
+
+            
+            if (thr_num==0){
+                ThrCalc=dataProc(dataforProc, lim_num);
+                var j=0;
+                for (var i=0; i<24; i++){
+                    if (i==0 || i==2 || i==4 || i==8 || i==12 || i==14 || i==16 || i==20){
+                        ThrLimInst.push(ThrCalc[j]);
+                        j=j+1;
+                    }else{ThrLimInst.push(31)};
+                }
+
+                console.log(ThrLimInst);
+                THRLoad(ThrLimInst);
+                dataforProc=[];
+            };
+             
+        }, 0.5);
+
+
+        //Decomposition of characteristics by thresholds
+        function dataProc(dataforProc, lim_num){
+            document.getElementById("status_mes").value="THR processing";
+            var dataThrLim=[];
+            var datafifmin=0;
+            var datafifmax=0;
+            var lim50min=0;
+            var lim50max=0;
+            datachmod=r2c(get2dimensional(dataforProc,8));
+            console.log ("Data Perform",dataforProc, datachmod); 
+            for (var i=0; i<datachmod.length; i++){
+                for (var j=0; j<datachmod[0].length; j++){
+                    console.log(datachmod[i][j]);
+                    if (datachmod[i][j]<50 && datachmod[i][j]>datafifmin){
+                        datafifmin=datachmod[i][j];
+                        if (datachmod[i][j+1]>50){
+                            datafifmax=datachmod[i][j+1];
+                        }else{
+                           datafifmax=datachmod[i][j-1]; 
+                        }
+                        break;
+                    }  
+                }
+                console.log("50 Counts data", datafifmin, datafifmax);
+                console.log("50 Counts IndData", datachmod[i].indexOf(datafifmin), datachmod[i].indexOf(datafifmax));
+                if (datachmod[i].indexOf(datafifmin)==-1 && datachmod[i].indexOf(datafifmax)==-1){
+                    lim50max=500;
+                    lim50min=0;
+                }else{
+                    lim50min=Number(lim_num[datachmod[i].indexOf(datafifmin)]);
+                    lim50max=Number(lim_num[datachmod[i].indexOf(datafifmax)]);
+                }
+
+                console.log("50 Counts lim", lim50min, lim50max);
+                dataThrLim.push(lim50min+Math.round((lim50max-lim50min)/2));
+
+
+                
+                console.log("THR", dataThrLim);
+                datafifmin=0;
+                datafifmax=0;
+            }
+            console.log("dataThrLim", dataThrLim);
+            return dataThrLim;
+
+        }
+
+        
+
+
+        function sendCalData(count_lim, send_data){
+        for (i=0; i<32; i++){
+            console.log(i);
+            ajaxSendData(32*count_lim+i,send_data);}
+        }
+
+
+        function formCalData(ch_num,step_num){
+            var formData = {};
+            var formDataReady = [];
+
+            for ( var i=0; i <= 64; i=i+step_num){
+                for (var j=0; j<ch_num.length; j++){
+                    formData["regNum"]=parseInt('0x' + 300);
+                    formData["dataIn"]=parseInt(ch_num[j]);
+                    formDataReady.push(JSON.parse(JSON.stringify(formData)));
+
+                    formData["regNum"]=parseInt('0x' + 301);
+                    formData["dataIn"]=parseInt(Number(i));
+                    formDataReady.push(JSON.parse(JSON.stringify(formData)));
+
+                    formData["regNum"]=parseInt('0x'+260);
+                    formData["dataIn"]=parseInt('0x'+10);
+                    formDataReady.push(JSON.parse(JSON.stringify(formData)));
+
+                    formData["regNum"]= parseInt('0x' + 260);
+                    formData["dataIn"]= parseInt('0x' + 20);
+                    formDataReady.push(JSON.parse(JSON.stringify(formData))); 
+
+                }
+                
+            }
+            console.log(formDataReady);
+            return formDataReady;
+        }
+
+        return false;
+
+    }
 });
+
 
 
     
