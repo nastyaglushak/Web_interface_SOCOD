@@ -78,7 +78,7 @@
                             <div class="input-group input-group-sm col-sm-4">
                                 <input class="form-control form-control-sm" type="number" value="0" min="0" name="frameLen" id="frame_len">
                                 <div class="input-group-append">
-                                    <span class="input-group-text">мкс</span>
+                                    <span class="input-group-text">мс</span>
                                 </div>
                             </div>
                         </div>
@@ -105,14 +105,41 @@
                                     <th scope="col">Порог 4</th>
                                 </tr>
                             </thead>
+                            <div class="col-sm-12">
+                                <h4 class="text-center">Правая половина</h4>   
+                            </div>
                             <tbody>
                                 <tr>
-                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" name="limit1" id="limit_1"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" name="limit2" id="limit_2"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" name="limit3" id="limit_3"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" name="limit4" id="limit_4"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" max="255" name="gLimit1" id="limit_1"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" max="255" name="gLimit2" id="limit_2"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" max="255" name="gLimit3" id="limit_3"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" max="255" name="gLimit4" id="limit_4"></td>
                                 </tr>
                             </tbody>
+
+                        </table>
+
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Порог 1</th>
+                                    <th scope="col">Порог 2</th>
+                                    <th scope="col">Порог 3</th>
+                                    <th scope="col">Порог 4</th>
+                                </tr>
+                            </thead>
+                            <div class="col-sm-12">
+                                <h4 class="text-center">Левая половина</h4>   
+                            </div>
+                            <tbody>
+                                <tr>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" max="255" name="gLimit5" id="limit_5"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" max="255" name="gLimit6" id="limit_6"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" max="255" name="gLimit7" id="limit_7"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5 " type="number" value="0" min="0" max="255" name="gLimit8" id="limit_8"></td>
+                                </tr>
+                            </tbody>
+
                         </table>
 
                         <div class="row mt-1">
@@ -136,13 +163,20 @@
                                 </font>
                             </div>
                             <select class="custom-select custom-select-sm col-sm-4" id="select_chip" name="chip_select">
-                                <option selected >Выберите чип</option>
+                                <option selected value ="undefined" >Выберите чип</option>
                                 <option  id="ch1" value ="00" >Чип 1</option>
                                 <option  id="ch2" value ="20" >Чип 2</option>
                                 <option  id="ch3" value ="40" >Чип 3</option>
                                 <option  id="ch4" value ="60" >Чип 4</option>
                                 <option  id="ch5" value ="80" >Чип 5</option>
                                 <option  id="ch6" value ="A0" >Чип 6</option>
+
+                                <option  id="ch7" value ="100" >Чип 7</option>
+                                <option  id="ch8" value ="120" >Чип 8</option>
+                                <option  id="ch9" value ="140" >Чип 9</option>
+                                <option  id="ch10" value ="160" >Чип 10</option>
+                                <option  id="ch11" value ="180" >Чип 11</option>
+                                <option  id="ch12" value ="1A0" >Чип 12</option>
                                 </select> 
                         </div>
 
@@ -159,61 +193,60 @@
                             <tbody>
                                 <tr>
                                     <th scope="row">Канал 1</th>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR11"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR12"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR11" id="THR11"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR12" id="THR12"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name=""  disabled></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Канал 2</th>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR21"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR22"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR21" id="THR21"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR22" id="THR22"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name=""  disabled></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Канал 3</th>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR31"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR32"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR33"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR34"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR31" id="THR31"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR32" id="THR32"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR33" id="THR33"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR34" id="THR34"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Канал 4</th>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR41"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR42"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR43"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR44"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR41" id="THR41"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR42" id="THR42"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR43" id="THR43"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR44" id="THR44"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Канал 5</th>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR51"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR52"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR51" id="THR51"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR52" id="THR52"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name=""  disabled></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Канал 6</th>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR61"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR62"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR61" id="THR61"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR62" id="THR62"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name=""  disabled></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name=""  disabled></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Канал 7</th>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR71"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR72"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR73"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR74"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR71" id="THR71"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR72" id="THR72"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR73" id="THR73"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR74" id="THR74"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Канал 8</th>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR81"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR82"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR83"></td>
-                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" name="" id="THR84"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR81" id="THR81"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR82" id="THR82"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR83" id="THR83"></td>
+                                    <td><input class="form-control form-control-sm col-sm-5" type="number" value="0" min="0" max="63" name="LTHR84" id="THR84"></td>
                                 </tr>
-
                             </tbody>
                         </table>
 
@@ -227,51 +260,100 @@
                         
                         <div class="row mt-1">
                             <div class="col-sm-8">
-                                <button type="button" class="btn btn-success float-right" id="d_ilimit_a_write_btn">Записать индивидуальные пороги</button>
+                                <button type="button" class="btn btn-success " id="d_ilimit_a_write_btn">Записать индивидуальные пороги</button>
+                                <button type="button" class="btn btn-success " id="d_ilimit_all_btn">Записать для всех чипов</button>
                             </div>
                         </div>
                     </div>
 
-
                     <div id="calibration_settings" class="container-fluid tab-pane fade ">
                         <div class="row mt-1"> 
-                            <canvas width="800" height="800" id="graph_data"></canvas>
+                            <canvas width="600" height="600" id="graph_data"></canvas>
                         </div>
-
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <h4 class="text-center">Счетная характеристика</h4>   
+                            </div>
+                        </div>
                         <div class="row mt-1">
                             <div class="col-sm-10">
-                                <label class=" col-sm-5 " data-placement="right">Выбор порога</label>
+                                <!--<label class=" col-sm-5 " data-placement="right">Выбор порога</label>-->
                                 <div class="input-group input-group-sm col-sm-12 float-right">
                                     <div class="input-group-append">
                                         <span class="input-group-text">Чип</span>
                                     </div>
-                                    <input class="form-control form-control-sm" type="number" value="0" min="0" id="chip_num">
+                                    <input class="form-control form-control-sm" type="number" value="1" min="1" max ="12" id="chip_num">
                                     <div class="input-group-append">
                                         <span class="input-group-text">Канал</span>
                                     </div>
-                                    <input class="form-control form-control-sm" type="number" value="0" min="0" id="ch_num">
+                                    <input class="form-control form-control-sm" type="number" value="1" min="1" max ="8" id="ch_num">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">Порог</span>
+                                        <span class="input-group-text">Гл. порог</span>
                                     </div>
-                                    <input class="form-control form-control-sm" type="number" value="0" min="0" id="lim_num">
+                                    <input class="form-control form-control-sm" type="number" value="1" min="1" max="4" id="lim_num">
 
                                 </div>
                             </div>
                             <div class="col-sm-10">
-                                <label class=" col-sm-5 " data-placement="right">Количество отсчетов</label>
-                                <input class="form-control form-control-sm col-sm-5 float-right" type="number" value="0" min="0" name="data_number" id="count_number">
-                            </div>
-                            <div class="col-sm-10">
+                                <label class=" col-sm-5 " data-placement="right">Количество отсчетов в точке</label>
+                                <input class="form-control form-control-sm col-sm-3 float-right" type="number" value="0" min="0" name="data_number" id="count_number">
+
                                 <label class=" col-sm-5 " data-placement="right">Длина шага</label>
-                                <input class="form-control form-control-sm col-sm-5 float-right" type="number" value="0" min="0" name="step_num" id="step_number">
-                            </div>
-                            <div class="col-sm-10">
-                                <button type="button" class="btn btn-success ml-1 float-left" id="d_add_graph_btn">Снять данные</button>
-                                <button type="button" class="btn btn-success ml-1 float-left" id="d_draw_save_btn">Сохранить данные</button>
+                                <input class="form-control form-control-sm col-sm-3 float-right" type="number" value="0" min="0" name="step_num" id="step_number">
+                                
+                                <label class=" col-sm-5 " data-placement="right">Количество измерений</label>
+                                <input class="form-control form-control-sm col-sm-3 float-right" type="number" value="0" min="0" name="data_number" id="caldata_number">
                             </div>
                         </div>
 
+                        
+                            <div class="col-sm-10">
+                                <div class="row ml-1 mt-1 pb-1">
+                                    <div class="form-check form-check-sm col-sm-5 ml-2">
+                                        <input class="form-check-input" type="checkbox" name="chFrRadio" id="gllim_radio" value="channel" checked>
+                                        <label class="form-check-label">Глобальные пороги</label>
+                                    </div>
+
+                                    <div class="form-check form-check-sm col-sm-5 ml-2">
+                                        <input class="form-check-input" type="checkbox" name="chFrRadio" id="inlim_radio" value="channel">
+                                        <label class="form-check-label">Индивидуальные пороги</label>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        <div class="row mt-1">
+                            <div class="col-sm-10">
+                                <button type="button" class="btn btn-success ml-1 float-left" id="d_add_graph_btn">Снять характеристику</button>
+                                <button type="button" class="btn btn-success ml-1 float-left" id="d_draw_save_btn">Сохранить данные</button>
+                                <button type="button" class="btn btn-success ml-1 float-left" id="d_draw_gis_btn">Построить гистограмму</button>
+                            </div>
+                        </div>
+                            <div class="row mt-1">
+                                <div class="col-sm-12">
+                                    <h4 class="text-center">Автоматическая настройка порогов</h4>   
+                                </div>
+                            </div>
+
+                            <div class="col-sm-10">
+                                <div class="row ml-1 mt-1 pb-1">
+                                    <div class="form-check form-check-sm col-sm-5 ml-2">
+                                        <input class="form-check-input" type="checkbox" name="chFrRadio" id="channel13_radio" value="channel" checked>
+                                        <label class="form-check-label">Установка 1 и 3 порогов</label>
+                                    </div>
+
+                                    <div class="form-check form-check-sm col-sm-5 ml-2">
+                                        <input class="form-check-input" type="checkbox" name="chFrRadio" id="channel24_radio" value="channel">
+                                        <label class="form-check-label">Установка 2 и 4 порогов</label>
+                                    </div>
+                                </div>
+                                <label class=" col-sm-5 " data-placement="right">Статус</label>
+                                <input class="form-control form-control-sm col-sm-5 float-right" type="text" value="---" id="status_mes">
+                                <button type="button" class="btn btn-success ml-1 float-left" id="d_autolimit_btn">Автоматическая настройка порогов</button>
+                            </div>
+                        
+
                     </div>
+
 
                 </div>
 
@@ -283,7 +365,7 @@
                     <div class="col-sm-1">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="chFrRadio" id="channel_change_radio" value="channel" checked>
-                            <label class="form-check-label">Канал</label>
+                            <label class="form-check-label">Сенсор</label>
                         </div>
                     </div>
                     <div class="col-sm-5">
@@ -293,19 +375,27 @@
                         <input class="form-control form-control-sm" type="number" value="1" min="1" name="channelSliderNumber" id="channel_slider_number">
                     </div>
                     
-                    <div class="col-sm-2">
+                    <div class="col-sm-1">
                         <select class="custom-select custom-select-sm" id="select_chart_type">
                             <option value="line">Линия</option>
                             <option selected value="column">Столбчатая диаграмма</option>
                         </select>
                     </div>
+                    <div class="col-sm-4">
+                        <div class="form-inline">
+                            <span class="align-self-center col-sm-4 text-right">X:</span>
+                            <input class="col-sm-4" type="number" value="0" step="0.1" id="x_scale_min">
+                            <input class="col-sm-4" type="number" value="0" step="0.1" id="x_scale_max">
+                        </div>
+                    </div>
+                    
                 </div>
 
                 <div class="row mt-3">
                     <div class="col-sm-1">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="chFrRadio" id="frame_change_radio" value="channel">
-                            <label class="form-check-label">Кадр</label>
+                            <label class="form-check-label">Электроника</label>
                         </div>
                     </div>
                     <div class="col-sm-5">
@@ -324,16 +414,26 @@
                         </div>
                     </div>
 
+                    <!--
                     <div class="col-sm-4">
                         <div class="form-inline">
                             <span class="align-self-center col-sm-4 text-right">X:</span>
                             <input class="col-sm-4" type="number" value="0" step="0.1" id="x_scale_min">
                             <input class="col-sm-4" type="number" value="0" step="0.1" id="x_scale_max">
                         </div>
+                    </div>-->
+
+                    <div class="col-sm-4">
+                        <div class="form-inline">
+                            <span class="align-self-center col-sm-4 text-right">Y:</span>
+                            <input class="col-sm-4" type="number" value="0" step="0.1" id="y_scale_min">
+                            <input class="col-sm-4" type="number" value="0" step="0.1" id="y_scale_max">
+                        </div>
                     </div>
                 </div>
 
-                <div class="row mt-3">
+                <!--<div class="row mt-3">
+                    
                     <div class="col-sm-1">
                         <div class="form-check">
                             <label class="form-check-label">Фильм</label>
@@ -355,7 +455,7 @@
                             <input class="col-sm-4" type="number" value="0" step="0.1" id="y_scale_max">
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="row mt-4 pb-4"></div>
 
                 <div class="progress">
@@ -386,10 +486,11 @@
                     </div>
                 </div>
 
+                
                 <div class="row mt-2 ml-1">
                     <input type="button" class="btn btn-success btn-send btn-sm col-sm-4 mr-1 ml-2" value="Снять данные" name="acquireDataBtn" id="acquire_data_btn">
-                    <small class="align-self-center col-sm-5">Число фильмов</small>
-                    <input class="form-control form-control-sm col-sm-2 ml-1" type="number" min="1" value="1" name="dataFilmNum" id="data_film_num">
+                    <!--<small class="align-self-center col-sm-5">Число фильмов</small>
+                    <input class="form-control form-control-sm col-sm-2 ml-1" type="number" min="1" value="1" name="dataFilmNum" id="data_film_num">-->
                 </div>
 
                 <div class="row mt-2 ml-1">
@@ -432,26 +533,21 @@
                             </tr>
                             <tr>
                                 <th scope="row">2</th>
-                                <td>0x0188</td>
-                                <td>Команды детонации</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
                                 <td>0x0260</td>
                                 <td>Основные команды</td>
                             </tr>
                             <tr>
-                                <th scope="row">4</th>
+                                <th scope="row">3</th>
                                 <td>0xFFF1</td>
                                 <td>Версия аппаратуры</td>
                             </tr>
                             <tr>
-                                <th scope="row">5</th>
+                                <th scope="row">4</th>
                                 <td>0xFFF2</td>
                                 <td>Версия прошивки</td>
                             </tr>
                             <tr>
-                                <th scope="row">6</th>
+                                <th scope="row">5</th>
                                 <td>0x0212</td>
                                 <td>Длина кадра</td>
                             </tr>
