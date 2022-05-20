@@ -837,7 +837,7 @@ function THRLoad(data_load){
 }
 
 //Sending registers: ajaxSendData(i, formDataReady)
-function ajaxSendData(i, formDataReady){
+    function ajaxSendData(i, formDataReady){
         $.ajax({
                 url: '/d_reg_a_write',
                 type: 'POST',
@@ -885,7 +885,7 @@ function ajaxSendData(i, formDataReady){
             });
     }
 
-function acqDataReq() {
+    function acqDataReq() {
             var formData = {};
             formData["forcedTrigger"] = true;
             fullDataArray=[];
@@ -1343,6 +1343,20 @@ $(document).ready(function() {
         return false;
     };
 
+    document.getElementById("write_to_time_btn").onclick=function(){
+        var TimeValue=document.getElementById("time_len").value;
+        var formData={};
+        var formDataReady = [];
+
+
+
+        formData["regNum"]= parseInt('0x' + 308);//parseInt('0x' + 260); //260 ox608
+        formData["dataIn"]= parseInt(Number(TimeValue));//parseInt('0x' + 80);; //80 ox128
+        formDataReady.push(JSON.parse(JSON.stringify(formData)));  
+
+        ajaxSendData(0,formDataReady);
+    }
+
     ///Global limits
     document.getElementById("d_limit_a_write_btn").onclick = function() {
 
@@ -1720,8 +1734,22 @@ $(document).ready(function() {
         (that is, which 4 registers need to be sent) from the total threshold array*/
         function sendCalData(count_lim, send_data, mode){
             //ajaxSendDataAll(mode*count_lim,send_data);
-        for (i=0; i<mode; i++){
-            ajaxSendData(mode*count_lim+i,send_data);}
+
+            /*for (i=0; i<mode; i++){
+            ajaxSendData(mode*count_lim+i,send_data);}*/
+            var limsend=[];
+
+            //ajaxSendDataAll(7*count_lim,send_data);
+            for (i=0; i<mode; i++){
+            //ajaxSendData(7*count_lim+i,send_data);
+                limsend.push(send_data[mode*count_lim+i]);
+                /*if (i==mode){
+                    
+                }*/
+            }
+
+            console.log("THR_Lim",limsend);
+            ajaxSendDataAll(0,limsend);
         }
     
         /**Generates an array of registers for a given channel 
@@ -1985,9 +2013,21 @@ $(document).ready(function() {
         }, 0.5);
     
         function sendCalData(count_lim, send_data){
+            var limsend=[];
+
             //ajaxSendDataAll(7*count_lim,send_data);
             for (i=0; i<7; i++){
-            ajaxSendData(7*count_lim+i,send_data);}
+            //ajaxSendData(7*count_lim+i,send_data);
+                limsend.push(send_data[7*count_lim+i]);
+                //console.log("THR_Lim",limsend);
+                /*if (i==7){
+
+                }*/
+            }
+
+            console.log("THR_Lim",limsend);
+            ajaxSendDataAll(0,limsend);
+
         }
     
         function formCalDataGlim(step_num){
