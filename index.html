@@ -78,7 +78,7 @@
                             <div class="input-group input-group-sm col-sm-4">
                                 <input class="form-control form-control-sm" type="number" value="0" min="0" name="frameLen" id="frame_len">
                                 <div class="input-group-append">
-                                    <span class="input-group-text">мс</span>
+                                    <span class="input-group-text">*100 мкс</span>
                                 </div>
                             </div>
                         </div>
@@ -90,24 +90,6 @@
                             </div>
                         </div>
 
-                        <div class="row mt-1">
-                            <div class="col-sm-8">
-                                <font size ="5">
-                                <small class="text align-self-center"  data-toggle="tooltip" data-placement="right" title="timeLen">Время измерений</small></font>
-                            </div>
-                            <div class="input-group input-group-sm col-sm-4">
-                                <input class="form-control form-control-sm" type="number" value="0" min="0" name="timeLen" id="time_len">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">мс</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-1 ">
-                            <div class=" col-sm-12">
-                                <input type="button" class="btn btn-success btn-send btn-sm ml-1 float-right" value="Записать" name="writeToRegBtn" id="write_to_time_btn">
-                            </div>
-                        </div>
 
                         <div class="row mt-1">
                             <div class="col-sm-12">
@@ -322,6 +304,9 @@
                                 
                                 <label class=" col-sm-5 " data-placement="right">Количество измерений</label>
                                 <input class="form-control form-control-sm col-sm-3 float-right" type="number" value="0" min="0" name="data_number" id="caldata_number">
+
+                                <label class=" col-sm-5 " data-placement="right">Стартовое значение</label>
+                                <input class="form-control form-control-sm col-sm-3 float-right" type="number" value="0" min="0" name="ref_number" id="ref_number">
                             </div>
                         </div>
 
@@ -365,9 +350,23 @@
                                         <label class="form-check-label">Установка 2 и 4 порогов</label>
                                     </div>
                                 </div>
+                                <div class="input-group input-group-sm col-sm-12 float-right">
+                                    <div class="col-sm-12">
+                                        <h4 class="text-center">Калибровка детектора в диапазоне</h4>   
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">От</span>
+                                    </div>
+                                    <input class="form-control form-control-sm" type="number" value="1" min="1" max ="97" id="ch_start">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">До</span>
+                                    </div>
+                                    <input class="form-control form-control-sm" type="number" value="1" min="1" max ="97" id="ch_stop">
+                                </div>
                                 <label class=" col-sm-5 " data-placement="right">Статус</label>
                                 <input class="form-control form-control-sm col-sm-5 float-right" type="text" value="---" id="status_mes">
-                                <button type="button" class="btn btn-success ml-1 float-left" id="d_autolimit_btn">Автоматическая настройка порогов</button>
+                                <button type="button" class="btn btn-success ml-1 float-left" id="d_autolimit_btn">Автонастройка по гл. порогам</button>
+                                <button type="button" class="btn btn-success ml-1 float-left" id="d_iautolimit_btn">Автонастройка по инд. порогам</button>
                             </div>
                         
 
