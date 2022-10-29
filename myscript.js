@@ -737,7 +737,6 @@ function DataFormRead() {
     limitTHR.push(document.getElementById("THR51").value);
     limitTHR.push(document.getElementById("THR52").value);
 
-
     limitTHR.push(document.getElementById("THR61").value);
     limitTHR.push(document.getElementById("THR62").value);
 
@@ -1537,31 +1536,29 @@ $(document).ready(function () {
 
     }
 
-    document.getElementById("d_add_graph_btn").onclick = function () {
+    document.getElementById("d_add_countch_btn").onclick = function () {
         var data_ch = [];
-        var data_x = [];
+        data_x = [];
         fullDataforPlot = [];
-        var fullDataPlotGl = [];
         var count_num = 0;
         var count_lim = 0;
-
-
+    
+    
         var chipnum = Number(document.getElementById("chip_num").value);
         var chip_num = getDACChip(Number(document.getElementById("chip_num").value));
-        var chNum=Number(document.getElementById("ch_num").value);
         var chlim_num = getDACChannel(Number(document.getElementById("ch_num").value), Number(document.getElementById("lim_num").value));
         var ch_num = chip_num + chlim_num;
-
+    
         var counter_num;
         var thr_num;
-
+    
         var c_num = Number(document.getElementById("count_number").value);
         var st_num = Number(document.getElementById("step_number").value);
         var mode;
         var send_data;//formCalDataGlim or formCalDataIlim
-
+    
         var thrSend = [];
-
+    
         if (document.getElementById("gllim_radio").checked == true) {
             mode = 7;
             for (var i = 0; i < 256; i = i + st_num) {
@@ -1570,7 +1567,7 @@ $(document).ready(function () {
             send_data = formGTHR(thrSend);
             thr_num = Math.round(256 / st_num);//for ind 64
         };
-
+    
         if (document.getElementById("inlim_radio").checked == true) {
             mode = 4;
             for (var i = 0; i < 64; i = i + st_num) {
@@ -1581,8 +1578,7 @@ $(document).ready(function () {
             console.log("Count num", counter_num);
             thr_num = Math.round(64 / st_num);//for ind 64
         };
-
-
+    
         console.log("Chan, Chip", chip_num, ch_num, chipnum, firstElemData(chipnum), counter_num);
         var acDatasum = 0;
         var acDataSum = [];
@@ -1591,7 +1587,7 @@ $(document).ready(function () {
         var dataSendValid = 0;
         var k = 0;
         let DataTimer = setTimeout(async function dtick() {
-
+    
             if (count_num == 0) {
                 document.getElementById("status_mes").value = "Calculating characteristics THR " + count_lim * st_num;
                 sendCalData(count_lim, send_data, mode);
@@ -1601,9 +1597,9 @@ $(document).ready(function () {
                 count_num = count_num + 1;
                 console.log("Data send");
             }
-
+    
             if (count_num == c_num + 1) {
-
+    
                 if (mode == 4) {
                     data_x.push(JSON.stringify(send_data[4 * count_lim + 1].dataIn));
                     for (var i = 0; i < data_ch.length; i++) {
@@ -1613,7 +1609,7 @@ $(document).ready(function () {
                         }
                     }
                 }
-
+    
                 if (mode == 7) {
                     data_x.push(JSON.stringify(send_data[7 * count_lim + 1].dataIn));
                     acDataSum = get2dimensional(data_ch, 100);
@@ -1625,8 +1621,7 @@ $(document).ready(function () {
                         acDatasum = 0;
                     }
                 }
-
-
+    
                 count_num = 0;
                 dataSendValid = 0;
                 thr_num = thr_num - 1;
@@ -1634,29 +1629,29 @@ $(document).ready(function () {
                 data_ch = [];
                 acDataSum = [];
                 console.log("Current value", count_num, thr_num, count_lim);
-
+    
             }
-
+    
             if (dataSendValid != count_num) {
                 dataSendValid = count_num;
                 acqDataReq();
             };
             //console.log(fullDataArray);
             if (fullDataArray.length != 0) {
-
+    
                 if (mode == 4) {
                     data_ch.push(fullDataArray[firstElemData(chipnum) + c_num - 1]);
                     console.log(firstElemData(chipnum) + c_num - 1, fullDataArray, c_num);
                 }
-
+    
                 if (mode == 7) {
                     for (var i = 0; i < 100; i++) {
-
+    
                         if (k == 97) { data_ch.push(Math.round(data_chSum / 90)); } else {
                             data_ch.push(fullDataArray[k]);
                             //console.log(k,data_ch);
-
-                            if ((k == 24) || (k == 40) || (k == 88)) { data_chSum += 0; } else {
+    
+                            if ((k == 25) || (k == 41) || (k == 89)) { data_chSum += 0; } else {
                                 data_chSum += data_ch[i + 100 * (count_num - 1)];
                             }
                         }
@@ -1669,25 +1664,19 @@ $(document).ready(function () {
                 count_num = count_num + 1;
                 //console.log("DataSend", dataSendValid, count_num)
             };
-
+    
             if (thr_num > 0) DataTimer = setTimeout(dtick, 0.5);
-
+    
             if (thr_num == 0) {
-                if (mode == 4) {
-                    drawPlot(data_x, fullDataforPlot);
-                    console.log(data_x, fullDataforPlot);
-                }
                 if (mode == 7) {
-                    fullDataforPlotGl = r2c(get2dimensional(fullDataforPlot, 100));
-                    drawPlot(data_x, fullDataforPlotGl[firstElemData(chipnum) + chNum - 1]);
-                    console.log(fullDataforPlotGl, chipnum, chNum, fullDataforPlotGl[firstElemData(chipnum) + chNum - 1] );
                     fullDataforPlot = get2dimensional(fullDataforPlot, 100);
+                    fullDataforPlotGl = r2c(fullDataforPlot);
                     console.log(fullDataforPlot);
                 }
             }
-
+    
         }, 0.5);
-
+    
     };
 
     document.getElementById("d_draw_save_btn").onclick = function () {
@@ -1720,7 +1709,7 @@ $(document).ready(function () {
         return false;
     };
 
-    function gettingData(datacount, countdata, chnum, chip_num, count, data_x) {
+    function getDataforGis(datacount, chnum, chip_num, count, data_x) {
         var dataSendValid = 0;
         var sum = 0;
         var datach = [];
@@ -1758,7 +1747,7 @@ $(document).ready(function () {
                         sum = sum + datachmod[i][j];
                         //console.log(sum);
                     }
-                    fullDataforGis.push(sum / countdata);
+                    fullDataforGis.push(sum / datacount);
                     sum = 0;
                     //console.log(fullDataforGis);
                 }
@@ -1770,97 +1759,100 @@ $(document).ready(function () {
         return false;
     };
 
-    document.getElementById("d_draw_gis_btn").onclick = function () {
+    document.getElementById("d_draw_btn").onclick = function () {
         var countdata = Number(document.getElementById("caldata_number").value);
         var chip_num = Number(document.getElementById("chip_num").value);
-
-        var datacount = countdata;
-        fullDataforGis = [];
-
-        var chnum = [];
-
-        var data_x = [];
-        for (var i = 0; i < 8; i++) {
-            data_x.push(i + 1);
-            chnum.push(i) + 1;
+        var chNum=Number(document.getElementById("ch_num").value);
+    
+        if ((document.getElementById("plot_radio").checked == true) && (document.getElementById("gllim_radio").checked == true)) {
+                drawPlot(data_x, fullDataforPlot);
+                console.log(data_x, fullDataforPlot);
         }
-
-        console.log("Chnum", chnum, firstElemData(chip_num), data_x);
-        gettingData(datacount, countdata, chnum, chip_num, 8, data_x);
-
+    
+        if ((document.getElementById("plot_radio").checked == true) && (document.getElementById("inlim_radio").checked == true)) {
+                drawPlot(data_x, fullDataforPlotGl[firstElemData(chip_num) + chNum - 1]);
+                console.log(fullDataforPlotGl, chip_num, chNum, fullDataforPlotGl[firstElemData(chip_num) + chNum - 1] );
+        }
+    
+        if (document.getElementById("gis_radio").checked == true) {
+            data_x = [];
+            fullDataforGis = [];
+            var chnum = [];
+            for (var i = 0; i < 8; i++) {
+                data_x.push(i + 1);
+                chnum.push(i) + 1;
+            }
+    
+            console.log("Chnum", chnum, firstElemData(chip_num), data_x);
+            getDataforGis(countdata, chnum, chip_num, 8, data_x);
+        }
         return false;
     };
 
     document.getElementById("d_autolimit_btn").onclick = function () {
-        var data_ch = [];
-        //fullDataforPlot = [];
-        var count_num = 0;
-        var count_lim = 0;
 
-        console.log("FullDataPlot",fullDataforPlot);
-
-        var c_num = Number(document.getElementById("count_number").value);
         var st_num = Number(document.getElementById("step_number").value);
-
+        var ch_start=Number(document.getElementById("ch_start").value);
+        var ch_stop=Number(document.getElementById("ch_stop").value);
+        var dataforProc=[];
+    
+        for (var i=ch_start; i<ch_stop;i++){
+            dataforProc.push(fullDataforPlot(i));
+        }
+    
+        console.log("DataforProc",fullDataforPlot,dataforProc);
+    
         var thrSend = [];
         for (var i = 0; i < 256; i = i + st_num) {
             thrSend.push(i);
         }
-
-        var send_data = formGTHR(thrSend);
-
-        var thr_num = Math.round(256 / st_num);//for ind 64
-
-        var acDatasum = 0;
-        var acDataSum = [];
-        var data_chSum = 0;
+    
         var dataforanalysis = [];
         fullDataArray = [];
         var LocTHR = [];
-        var dataSendValid = 0;
-        var k = 0;
-
+    
         document.getElementById("status_mes").value = "Automatic calibration of thresholds";
-
+    
         //fullDataforPlot = get2dimensional(fullDataforPlot, 100);
         //console.log("Data Process", fullDataforPlot);
-        dataforanalysis = dataProc(fullDataforPlot, st_num);
+        //dataforanalysis = dataProc(fullDataforPlot, st_num);
+        dataforanalysis = dataProc(dataforProc, st_num);
         console.log("DataForAn", dataforanalysis);
         LocTHR = Slide_Window(dataforanalysis);
         THRsent(LocTHR);
-
+    
         //Decomposition of characteristics by thresholds
         function dataProc(dataforProc, deltagllim) {
             var prociter = 0;
             if (deltagllim > 1) prociter = Math.log2(deltagllim) - 1;
-
+    
             document.getElementById("status_mes").value = "THR processing. Search for 50 percent of counts";
-
+    
             dataforProc = r2c(dataforProc);
-
+    
             var dataRef = 0.5 * Number(document.getElementById("ref_number").value);
             console.log("DataRef", dataRef);
-
+    
             var datamax50 = 0;
             var datamin50 = 0;
             var data50 = 0;
             var datachip = [];
-
+    
             var datathrmin = 0;
             var datathrmax = 0;
             var datathr = 0;
             var lim_num = [];
-
+    
             //console.log(dataforProc, dataforProc.length)
-
+    
             //Seach 50% for each channels
-
+    
             for (var i = 0; i <= 256 / deltagllim; i++) { lim_num.push(deltagllim * i) };
-
+    
             for (var l = 1; l < 13; l++) {
-
+    
                 for (var i = 8 * (l - 1); i < 8 * l; i++) {
-
+    
                     //Searh
                     for (var j = Math.round(50 / deltagllim) + 1; j < dataforProc[0].length; j++) {
                         datamax50 = 0;
@@ -1882,16 +1874,16 @@ $(document).ready(function () {
                                 }
                             }
                             break;
-
+    
                         }
                     }
                     data50 = (datamax50 - datamin50) / 2 + datamin50;
                     //console.log("50 Counts data", l, i, j, datamin50, datamax50, data50);
-
+    
                     if (j == 31) { datathr = datathrmin }
                     else { datathr = Number(datathrmin + (datathrmax - datathrmin) / 2) }
                     //console.log("Data 1 iter", j, data50, datathr, datathrmin, datathrmax);
-
+    
                     //Fit
                     for (var k = 0; k < prociter; k++) {
                         if (data50 < dataRef) {
@@ -1916,39 +1908,39 @@ $(document).ready(function () {
                 }
             }
             return datachip;
-
+    
         }
-
+    
         function Slide_Window(dataforanalysis) {
             var window = 32;
             var thrrange = [];
             var slidewin = [];
             var datarange = [];
-
+    
             document.getElementById("status_mes").value = "THR processing. Autocaribration";
-
+    
             for (var i = 0; i < 256; i++) { thrrange.push(i); }
-
+    
             for (var i = 0; i < 257 - window; i++) { slidewin.push(thrrange.slice(i, i + window)); }
-
+    
             for (var i = 0; i < slidewin.length; i++) { datarange.push(0); }
-
+    
             console.log("THRrange", thrrange);
             console.log("SlideWin", slidewin, slidewin[0].length, slidewin[0][window - 1]);
             console.log("DataRange", datarange);
             console.log("Data", dataforanalysis);
-
+    
             for (var i = 0; i < slidewin.length; i++) {
                 for (var k = 0; k < dataforanalysis.length; k++) {
                     if (dataforanalysis[k] >= slidewin[i][0] && dataforanalysis[k] <= slidewin[i][window - 1]) { datarange[i] += 1; }
                 }
             }
             console.log("DataRange2", datarange, Math.max.apply(null, datarange));
-
+    
             var datarangemax = Math.max.apply(null, datarange);
             var dataint = [];
             var datathav = 0;
-
+    
             for (var i = 0; i < datarange.length; i++) {
                 if (datarange[i] == datarangemax) {
                     dataint.push(i);
@@ -1956,11 +1948,11 @@ $(document).ready(function () {
             }
             console.log("DataInt", dataint);
             console.log(slidewin[dataint[0]][0], slidewin[dataint[0]][window - 1]);
-
+    
             datathav = slidewin[dataint[0]][0];
-
+    
             console.log("DataAv", datathav);
-
+    
             var datarange_an = [];
             var datarange_anch = [];
             for (var i = 0; i < dataforanalysis.length; i++) {
@@ -1976,7 +1968,7 @@ $(document).ready(function () {
             var LTHR = [];
             var coef = 2.133;
             var maxLTHR = 63 / coef;
-
+    
             for (var i = 0; i < dataforanalysis.length; i++) {
                 if (datarange_anch.includes(i) == false) {
                     if (dataforanalysis[i] < datathav) {
@@ -1988,7 +1980,7 @@ $(document).ready(function () {
                     }
                 }
             };
-
+    
             for (var i = 0; i < datarange_an.length; i++) {
                 if (datarange_an[i] > datathav) {
                     if ((Math.abs(coef * (datathav - datarange_an[i]))) > 63) {
@@ -1999,9 +1991,9 @@ $(document).ready(function () {
                 }
                 else (deltaTHR.push(0));
             };
-
+    
             console.log("DeltaTHR", deltaTHR, deltaTHRwhAv, deltaTHRwhAvCh);
-
+    
             for (var i = 0; i < 96; i++) {
                 if (datarange_anch.includes(i) == true) {
                     LTHR.push(deltaTHR[datarange_anch.indexOf(i)]);
@@ -2015,14 +2007,14 @@ $(document).ready(function () {
             console.log("LTHR", LTHR);
             return LTHR;
         }
-
+    
         /**If mode==32, then a list is generated for saving to a file, 
          * if mode==24 for uploading to the detector */
         function THRform(dataIn, mode) {
-
+    
             var data_load = [];
             var fullDataLoad = [];
-
+    
             for (var k = 1; k < 13; k++) {
                 data_load = [];
                 for (var i = 0; i < 8; i++) {
@@ -2033,14 +2025,14 @@ $(document).ready(function () {
                 data_load.splice(9, 0, 0, 0);
                 data_load.splice(17, 0, 0, 0);
                 data_load.splice(21, 0, 0, 0);
-
+    
                 if (mode == 32) {
                     data_load.splice(2, 0, '-', '-');
                     data_load.splice(6, 0, '-', '-');
                     data_load.splice(18, 0, '-', '-');
                     data_load.splice(22, 0, '-', '-');
                 }
-
+    
                 if (mode==24){
                     console.log("THR Load");
                 }else{
@@ -2049,29 +2041,29 @@ $(document).ready(function () {
                 for (var i = 0; i < mode; i++) {
                     fullDataLoad.push(data_load[i]);
                 };
-
+    
                 console.log("DataLoad", data_load, k, fullDataLoad);
-
+    
                 if (k == 12) {
                     document.getElementById("status_mes").value = "Autocalibration ready";
                 };
             };
-
+    
             return fullDataLoad;
-
+    
         }
-
+    
         function THRsent(LocTHR) {
             var fullDataLoad = THRform(LocTHR, 24);
             var fullDataFile = THRform(LocTHR, 32);
             var numChip = numChipAutoGen();
-
+    
             formTHR(numChip, fullDataLoad);
             AutoTHRSave(fullDataFile, 12);
             return false;
-
+    
         }
-
+    
     };
 
     document.getElementById("d_iautolimit_btn").onclick = function () {
@@ -2106,7 +2098,6 @@ $(document).ready(function () {
         var counter_num = [];
         var send_data = [];
 
-        var datacount = countdata;
         fullDataforGis = [];
 
         counter_num = getCounterNumber(Number(document.getElementById("ch_num").value), Number(document.getElementById("lim_num").value));
@@ -2217,7 +2208,7 @@ $(document).ready(function () {
                 THRLoad(ThrLimInst);
                 formTHR(chipnum, ThrLimInst);
                 document.getElementById("status_mes").value = "Getting data and drawing histogram";
-                gettingData(datacount, countdata, counter_num, chip_num, 12, data_x);
+                getDataforGis(countdata, counter_num, chip_num, 12, data_x);
                 dataforProc = [];
             };
 
