@@ -18,7 +18,8 @@
     <script src="js/myscript.js" async></script>
     <script src="js/filesaver.min.js"></script>
     <script src="js/plotly.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>-->
+    <script src="js/chart.min.js"></script>
 </head>
 
 <body>
@@ -269,7 +270,14 @@
 
                     <div id="calibration_settings" class="container-fluid tab-pane fade ">
                         <div class="row mt-1"> 
-                            <canvas width="600" height="600" id="graph_data"></canvas>
+                            <!--<canvas width="600" height="600" id="graph_data"></canvas>-->
+                            <div class="col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-8" id="chart_field">
+                                        <div id="ch_chart"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row mt-1">
                             <div class="col-sm-12">
@@ -320,6 +328,17 @@
                                         <input class="form-check-input" type="checkbox" name="chFrRadio" id="inlim_radio" value="channel">
                                         <label class="form-check-label">Индивидуальные пороги</label>
                                     </div>
+
+                                    <div class="form-check form-check-sm col-sm-5 ml-2">
+                                        <input class="form-check-input" type="checkbox" name="chFrRadio" id="plot_radio" value="channel" checked>
+                                        <label class="form-check-label">Счетная характеристика</label>
+                                    </div>
+                                    
+                                    <div class="form-check form-check-sm col-sm-5 ml-2">
+                                        <input class="form-check-input" type="checkbox" name="chFrRadio" id="gis_radio" value="channel">
+                                        <label class="form-check-label">Гистограмма</label>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         
@@ -328,14 +347,6 @@
                                 <button type="button" class="btn btn-success ml-1 float-left" id="d_add_countch_btn">Снять характеристику</button>
                                 <button type="button" class="btn btn-success ml-1 float-left" id="d_draw_save_btn">Сохранить данные</button>
                                 <button type="button" class="btn btn-success ml-1 float-left" id="d_draw_btn">Построить график</button>
-                                <div class="form-check form-check-sm col-sm-5 ml-2">
-                                    <input class="form-check-input" type="checkbox" name="chFrRadio" id="plot_radio" value="channel" checked>
-                                    <label class="form-check-label">Счетная характеристика</label>
-                                </div>
-                                <div class="form-check form-check-sm col-sm-5 ml-2">
-                                    <input class="form-check-input" type="checkbox" name="chFrRadio" id="gis_radio" value="channel">
-                                    <label class="form-check-label">Гистограмма</label>
-                                </div>
                             </div>
                         </div>
                             <div class="row mt-1">
@@ -358,18 +369,18 @@
                                 </div>
                                 <div class="input-group input-group-sm col-sm-12 float-right">
                                     <div class="col-sm-12">
-                                        <h4 class="text-center">Калибровка детектора в диапазоне</h4>   
+                                        <h4 class="text-center">Калибровка детектора </h4>   
                                     </div>
                                     <div class="input-group-append">
-                                        <span class="input-group-text">От</span>
+                                        <span class="input-group-text">Начало окна</span>
                                     </div>
                                     <input class="form-control form-control-sm" type="number" value="1" min="1" max ="97" id="ch_start">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">До</span>
+                                        <span class="input-group-text">Конец окна</span>
                                     </div>
                                     <input class="form-control form-control-sm" type="number" value="1" min="1" max ="97" id="ch_stop">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">Стартовое значение</span>
+                                        <span class="input-group-text">Максимум счетной характеристики</span>
                                     </div>
                                     <input class="form-control form-control-sm" type="number" value="0" min="0" name="ref_number" id="ref_number">
                                 </div>
